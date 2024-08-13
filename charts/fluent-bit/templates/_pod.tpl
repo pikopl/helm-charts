@@ -95,6 +95,10 @@ containers:
       - name: luascripts
         mountPath: /fluent-bit/scripts
     {{- end }}
+      - name: esCerts
+        readOnly: true
+        mountPath: "/etc/esCerts"
+      
     {{- if eq .Values.kind "DaemonSet" }}
       {{- toYaml .Values.daemonSetVolumeMounts | nindent 6 }}
     {{- end }}
@@ -133,6 +137,9 @@ volumes:
   - name: luascripts
     configMap:
       name: {{ include "fluent-bit.fullname" . }}-luascripts
+  - name: esCerts
+    secret:
+      secretName: incidents-exporter-es-certs
 {{- end }}
 {{- if eq .Values.kind "DaemonSet" }}
   {{- toYaml .Values.daemonSetVolumes | nindent 2 }}
